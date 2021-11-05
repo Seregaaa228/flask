@@ -35,13 +35,13 @@ class CRUD:
         return {"error": "Something gone wrong"}, 403
 
     @staticmethod
-    @app.route('/<deleted_account>', methods=['DELETE', 'POST'])
+    @app.route('/<deleted_account>', methods=["GET"])
     def delete_acc(deleted_account):
         for acc in data:
             if acc['name'] == deleted_account:
-                data.pop(data.index(acc))
-                with open('data.json', 'w') as data_file:
-                    json.dump(data, data_file)
+                data.remove(data.index(acc))
+            with open('data.json', 'w') as data_file:
+                json.dump(data, data_file)
                 return {"correct": "Account is deleted"}, 200
 
     @staticmethod
