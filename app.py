@@ -35,7 +35,7 @@ class CRUD:
         return {"error": "Something gone wrong"}, 403
 
     @staticmethod
-    @app.route('/<deleted_account>', methods=['DELETE'])
+    @app.route('/<deleted_account>', methods=['DELETE', 'POST'])
     def delete_acc(deleted_account):
         for acc in data:
             if acc['name'] == deleted_account:
@@ -45,7 +45,7 @@ class CRUD:
                 return {"correct": "Account is deleted"}, 200
 
     @staticmethod
-    @app.route('/reset/<changer_account>', methods=['PUT'])
+    @app.route('/reset/<changer_account>', methods=['PUT', "POST"])
     def change_password(changer_account):
         new_password = request.form.to_dict()
         for account in data:
