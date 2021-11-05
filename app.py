@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -8,16 +8,52 @@ with open("data.json") as file:
     data = json.load(file)
 
 
-@app.route("/registration", methods=['POST'])
-def regUser():
-    new_data = request.form
+class CRUD:
+    @staticmethod
+    @app.route("/registration", methods=['POST'])
+    def regUser():
+        new_data = request.form
 
-    if new_data["name"] not in [i["name"] for i in data]:
-        data.append(new_data)
+        if new_data["name"] not in [i["name"] for i in data]:
+            data.append(new_data)
+            with open("data.json", "w") as file:
+                json.dump(data, file, indent=4)
+            return {"correct": "Account is created"}, 200
+        return {"error": "Account with this name already exist"}, 400
+
+    @staticmethod
+    @app.route("/sign-in", methods=['POST'])
+    def sign_in():
+        new_data = request.form
+        for acc in data:
+            if new_data["name"] == str(acc["name"]) and new_data["password"] == str(acc["password"]):
+                return render_template("account.html", acc=acc)
+            elif new_data["name"] == str(acc["name"]) and new_data["password"] != str(acc["password"]):
+                return {"error": "Invalid password"}, 400
+            else:
+                continue
+        return {"error": "Something gone wrong"}, 403
+
+    @staticmethod
+    @app.route('/<deleted_account>', methods=['DELETE'])
+    def delete_acc(deleted_account):
+        for acc in data:
+            if acc['name'] == deleted_account:
+                data.pop(data.index(acc))
+                with open('data.json', 'w') as data_file:
+                    json.dump(data, data_file)
+                return {"correct": "Account is deleted"}, 200
+
+    @staticmethod
+    @app.route('/reset/<changer_account>', methods=['PUT'])
+    def change_password(changer_account):
+        new_password = request.form.to_dict()
+        for account in data:
+            if account["name"] == changer_account:
+                account['password'] = new_password['password']
+                return {"correct": "Password changed"}, 200
         with open("data.json", "w") as file:
             json.dump(data, file, indent=4)
-        return "Аккаунт создан"
-    return "Аккаунт с таким именем уже есть"
 
 
 @app.route("/registration")
@@ -35,44 +71,9 @@ def sign_inTemplate():
     return render_template("sign-in.html")
 
 
-@app.route("/sign-in", methods=['POST'])
-def sign_in():
-    new_data = request.form
-    for acc in data:
-        if new_data["name"] == str(acc["name"]) and new_data["password"] == str(acc["password"]):
-            return render_template("account.html", acc=acc)
-        elif new_data["name"] == str(acc["name"]) and new_data["password"] != str(acc["password"]):
-            return "Пароль неправильный"
-        else:
-            continue
-    return "Ошибка"
-
-
-@app.route('/<deleted_account>')
-def delete_acc(deleted_account):
-    for acc in data:
-        if acc['name'] == deleted_account:
-            data.pop(data.index(acc))
-            with open('data.json', 'w') as data_file:
-                json.dump(data, data_file)
-            return all_users()
-
-
 @app.route('/reset/<changer_account>')
 def change_template(changer_account):
-    return render_template('password-change.html', acc=changer_account )
-
-
-@app.route('/reset/<changer_account>', methods=['POST'])
-def change_password(changer_account):
-    new_password = request.form.to_dict()
-    for account in data:
-        if account["name"] == changer_account:
-            account['password'] = new_password['password']
-            return "Пароль сменился"
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-
+    return render_template('password-change.html', acc=changer_account)
 
 
 @app.route('/')
