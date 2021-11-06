@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ class CRUD:
             with open("data.json", "w") as file:
                 json.dump(data, file, indent=4)
             return {"correct": "Account is created"}, 200
-        return {"error": "Account with this name already exist"}, 400
+        return jsonify({"error": "Account with this name already exist"}, 400)
 
     @staticmethod
     @app.route("/sign-in", methods=['POST'])
@@ -29,10 +29,10 @@ class CRUD:
             if new_data["name"] == str(acc["name"]) and new_data["password"] == str(acc["password"]):
                 return render_template("account.html", acc=acc)
             elif new_data["name"] == str(acc["name"]) and new_data["password"] != str(acc["password"]):
-                return {"error": "Invalid password"}, 400
+                return jsonify({"error": "Invalid password"}, 400)
             else:
                 continue
-        return {"error": "Something gone wrong"}, 403
+        return jsonify({"error": "Something gone wrong"}, 403)
 
     @staticmethod
     @app.route('/<deleted_account>', methods=["GET"])
@@ -42,7 +42,7 @@ class CRUD:
                 data.remove(data.index(acc))
             with open('data.json', 'w') as data_file:
                 json.dump(data, data_file)
-                return {"correct": "Account is deleted"}, 200
+                return jsonify({"correct": "Account is deleted"}, 200)
 
     @staticmethod
     @app.route('/reset/<changer_account>', methods=['PUT', "POST"])
@@ -51,7 +51,7 @@ class CRUD:
         for account in data:
             if account["name"] == changer_account:
                 account['password'] = new_password['password']
-                return {"correct": "Password changed"}, 200
+                return jsonify({"correct": "Password changed"}, 200)
         with open("data.json", "w") as file:
             json.dump(data, file, indent=4)
 
