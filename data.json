@@ -1,1 +1,32 @@
-[{"name": "bebrer", "password": "228"}, {"name": "test", "password": "321"}, {"name": "wawa", "password": "222"}, {"name": "test1", "password": "123"}, {"name": "12312", "password": "228"}]
+{
+  "stas": {
+    "password": "fasagas"
+  },
+  "Igor": {
+    "password": "123123"
+  },
+  "vasya": {
+    "password": ""
+  },
+  "Killer": {
+    "password": "22881372837182371"
+  },
+  "Vilat": {
+    "password": "netyaneopravdivaus"
+  },
+  "1Vilat": {
+    "password": "netyaneopravdivaus"
+  },
+  "1Vilat1": {
+    "password": "asdafasfasfs"
+  },
+  "fdfdsff": {
+    "password": "asdasdasd"
+  },
+  "asdasdad": {
+    "password": "asdasdas"
+  },
+  "asdasdasdasdasdas": {
+    "password": "asdasdasdasdasda"
+  }
+}

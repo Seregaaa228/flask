@@ -1,6 +1,28 @@
-<form method="POST">
-    <p align="center">Регистрация</p>
-    <p align="center"><input name="name"></p>
-    <p align="center"><input name="password"></p>
-    <p align="center"><input type="submit"></p>
-</form>
+<div style="margin: 10px" action="/registration" method="POST" align="center">
+    <input name="login" type="text" placeholder="Login" id="login" />
+    <br />
+    <input
+        name="password"
+        type="password"
+        placeholder="Password"
+        id="password"
+    />
+    <br />
+    <button type="submit" onclick="submitForm()">Create new user</button>
+</div>
+<script>
+    function submitForm() {
+        var login = document.getElementById("login").value;
+        var password = document.getElementById("password").value;
+
+        fetch("registration", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ login: login, password: password }),
+        }).then(function onFinished() {
+            alert("User was registered!");
+        });
+    }
+</script>
